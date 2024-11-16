@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import morgan from "morgan";
 const { createHandler } = require("graphql-http/lib/use/express");
 import schema from "./schema";
+import { StatusCodes } from "http-status-codes";
 dotenv.config();
 const app = express();
 app.use(morgan("common"));
@@ -49,6 +50,13 @@ app.all("/graphql", (req, res, next) =>
   createHandler({
     schema: schema,
     context: () => ({ headers: req.headers }),
+    formatError: (error: any) => ({
+      message: error.originalError?.message || "Something Went Wrong",
+      statusCode:
+        error.originalError?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+      locations: error.locations,
+      path: error.path,
+    }),
   })(req, res, next)
 );
 
