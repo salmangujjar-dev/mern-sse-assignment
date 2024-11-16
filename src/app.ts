@@ -45,11 +45,11 @@ mongoose
   .catch((err: Error) => console.log(err));
 
 // Create and use the GraphQL handler.
-app.all(
-  "/graphql",
+app.all("/graphql", (req, res, next) =>
   createHandler({
     schema: schema,
-  })
+    context: () => ({ headers: req.headers }),
+  })(req, res, next)
 );
 
 // Start backend server
