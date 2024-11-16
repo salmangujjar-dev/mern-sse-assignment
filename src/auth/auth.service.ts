@@ -37,6 +37,7 @@ class AuthService {
         userId: user._id,
         email: user.email,
         role: ROLES.BUYER,
+        isAdmin: user.isAdmin,
       });
 
       return { accessToken, user };
@@ -64,6 +65,7 @@ class AuthService {
         userId: user._id,
         email: user.email,
         role: ROLES.BUYER,
+        isAdmin: user.isAdmin,
       });
 
       return { accessToken, user };
@@ -85,6 +87,7 @@ class AuthService {
         userId,
         email,
         role: newRole,
+        isAdmin: user.isAdmin,
       });
 
       return { accessToken: newAccessToken, user };
