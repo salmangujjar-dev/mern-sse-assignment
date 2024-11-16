@@ -14,17 +14,17 @@ class AuthService {
     this.jwtService = JWTService.getInstance();
   }
 
-  async signUp({ email, username, password, adminSecretKey }: TSignUp) {
+  async signUp({ email, username, password }: TSignUp) {
     try {
-      if (adminSecretKey && adminSecretKey !== process.env.ADMIN_SECRET_KEY) {
-        throw new CustomError(
-          "You are not authorized to create an Admin",
-          StatusCodes.UNAUTHORIZED
-        );
-      }
-
       if (!!(await User.findOne({ email }))) {
         throw new CustomError("Email Already Exists!", StatusCodes.CONFLICT);
+      }
+
+      if (password.length < 8) {
+        throw new CustomError(
+          "Password must be at least 8 characters long",
+          StatusCodes.BAD_REQUEST
+        );
       }
 
       const hashedPwd = bcrypt.hashSync(password, 10);
@@ -70,6 +70,7 @@ class AuthService {
 
   async switchRole({ userId, email, role }: TSwitchRole) {
     try {
+      const user = await User.findById(userId);
       const newRole = role === ROLES.BUYER ? ROLES.SELLER : ROLES.BUYER;
       const newAccessToken = this.jwtService.sign({
         userId,
@@ -77,7 +78,7 @@ class AuthService {
         role: newRole,
       });
 
-      return { accessToken: newAccessToken };
+      return { accessToken: newAccessToken, user };
     } catch (error: any) {
       return new CustomError();
     }

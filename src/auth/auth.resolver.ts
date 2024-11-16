@@ -17,14 +17,12 @@ const AuthMutations = new GraphQLObjectType({
         email: { type: new GraphQLNonNull(GraphQLString) },
         username: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },
-        adminSecretKey: { type: GraphQLString },
       },
-      resolve: async (_, { email, username, password, adminSecretKey }) => {
+      resolve: async (_, { email, username, password }) => {
         return await authService.signUp({
           email,
           username,
           password,
-          adminSecretKey,
         });
       },
     },
