@@ -7,6 +7,7 @@ import User from "../users/user.schema";
 
 import CustomError from "../../utils/CustomError";
 import { ROLES, TLogin, TSignUp, TSwitchRole } from "../../types/auth.types";
+
 class AuthService {
   private jwtService: JWTService;
 
@@ -74,6 +75,11 @@ class AuthService {
   async switchRole({ userId, email, role }: TSwitchRole) {
     try {
       const user = await User.findById(userId);
+
+      if (!user) {
+        throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+      }
+
       const newRole = role === ROLES.BUYER ? ROLES.SELLER : ROLES.BUYER;
       const newAccessToken = this.jwtService.sign({
         userId,
@@ -83,7 +89,7 @@ class AuthService {
 
       return { accessToken: newAccessToken, user };
     } catch (error: any) {
-      return new CustomError();
+      return new CustomError(error?.message, error?.statusCode);
     }
   }
 }
