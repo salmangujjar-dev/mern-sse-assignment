@@ -30,12 +30,14 @@ const AuthMutations = new GraphQLObjectType({
     login: {
       type: AuthType,
       args: {
-        email: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: GraphQLString },
+        username: { type: GraphQLString },
         password: { type: new GraphQLNonNull(GraphQLString) },
       },
-      resolve: async (_, { email, password }) => {
+      resolve: async (_, { email, username, password }) => {
         return await authService.login({
           email,
+          username,
           password,
         });
       },

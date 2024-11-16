@@ -44,9 +44,12 @@ class AuthService {
     }
   }
 
-  async login({ email, password }: TLogin) {
+  async login({ email, username, password }: TLogin) {
     try {
-      const user = await User.findOne({ email });
+      const user = await User.findOne({
+        $or: [{ email }, { username }],
+      });
+
       if (!user) {
         throw new CustomError("User not found", StatusCodes.NOT_FOUND);
       }
