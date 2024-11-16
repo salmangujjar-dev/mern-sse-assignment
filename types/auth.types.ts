@@ -9,7 +9,7 @@ export type TSignUp = Pick<IUser, "email" | "username" | "password"> & {
   adminSecretKey?: string;
 };
 
-export type TLogin = Pick<IUser, "email" | "username" | "password">;
+export type TLogin = Pick<IUser, "username" | "password">;
 
 export type TSwitchRole = Pick<IUser, "email" | "username"> & {
   userId: string;

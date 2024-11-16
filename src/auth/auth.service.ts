@@ -45,10 +45,10 @@ class AuthService {
     }
   }
 
-  async login({ email, username, password }: TLogin) {
+  async login({ username, password }: TLogin) {
     try {
       const user = await User.findOne({
-        $or: [{ email }, { username }],
+        $or: [{ email: username }, { username }],
       });
 
       if (!user) {
