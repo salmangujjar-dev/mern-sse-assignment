@@ -7,8 +7,11 @@ import User from "../users/user.schema";
 
 import CustomError from "../../utils/CustomError";
 import { ROLES, TLogin, TSignUp, TSwitchRole } from "../../types/auth.types";
+import Logger from "../../utils/Logger";
 
 class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   private jwtService: JWTService;
 
   constructor() {
@@ -42,7 +45,8 @@ class AuthService {
 
       return { accessToken, user };
     } catch (error: any) {
-      return new CustomError(error?.message, error?.statusCode);
+      this.logger.error(error);
+      return error;
     }
   }
 
@@ -70,7 +74,8 @@ class AuthService {
 
       return { accessToken, user };
     } catch (error: any) {
-      return new CustomError(error?.message, error?.statusCode);
+      this.logger.error(error);
+      return error;
     }
   }
 
@@ -92,7 +97,8 @@ class AuthService {
 
       return { accessToken: newAccessToken, user };
     } catch (error: any) {
-      return new CustomError(error?.message, error?.statusCode);
+      this.logger.error(error);
+      return error;
     }
   }
 }
