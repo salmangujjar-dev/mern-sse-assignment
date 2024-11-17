@@ -8,7 +8,7 @@ import { ROLES } from "../types/auth.types";
 
 const ROUTES = {
   [ROLES.BUYER]: [],
-  [ROLES.SELLER]: [],
+  [ROLES.SELLER]: ["createListing", "updateListing", "deleteListing"],
   COMMON_ROUTES: ["switchRole", "updateUser", "deleteUser", "user"],
   ADMIN: ["users"],
 };
