@@ -28,7 +28,7 @@ const UserQueries = new GraphQLObjectType({
         if (!user.isAdmin) {
           throw new CustomError("Not authorized", StatusCodes.FORBIDDEN);
         }
-        return await userService.getAllUsers();
+        return await userService.getAllUsers(user.userId);
       }),
     },
 
@@ -41,7 +41,7 @@ const UserQueries = new GraphQLObjectType({
           throw new CustomError("Not authorized", StatusCodes.FORBIDDEN);
         }
         const userId = user.isAdmin ? args.id : user.userId;
-        return await userService.getUser(userId);
+        return await userService.getUser(userId, user.userId);
       }),
     },
   },
@@ -67,11 +67,14 @@ const UserMutations = new GraphQLObjectType({
         }
         const userId = user.isAdmin ? args.id : user.userId;
         const adminCtx = user.isAdmin;
-        return await userService.updateUser({
-          ...args,
-          adminCtx,
-          id: userId,
-        });
+        return await userService.updateUser(
+          {
+            ...args,
+            adminCtx,
+            id: userId,
+          },
+          user.userId
+        );
       }),
     },
 
@@ -89,7 +92,7 @@ const UserMutations = new GraphQLObjectType({
           throw new CustomError("Not authorized", StatusCodes.FORBIDDEN);
         }
         const userId = user.isAdmin ? args.id : user.userId;
-        return await userService.deleteUser(userId);
+        return await userService.deleteUser(userId, user.userId);
       }),
     },
   },
