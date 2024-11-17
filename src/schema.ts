@@ -1,6 +1,7 @@
 import { GraphQLObjectType, GraphQLSchema } from "graphql";
 import { UserQueries, UserMutations } from "./users/users.resolver";
 import { AuthMutations } from "./auth/auth.resolver";
+import { ListingMutations } from "./listings/listing.resolver";
 
 const rootQuery = new GraphQLObjectType({
   name: "RootQuery",
@@ -22,6 +23,10 @@ const rootMutation = new GraphQLObjectType({
     },
     auth: {
       type: AuthMutations,
+      resolve: (parent, args, context) => ({}),
+    },
+    listing: {
+      type: ListingMutations,
       resolve: (parent, args, context) => ({}),
     },
   },
