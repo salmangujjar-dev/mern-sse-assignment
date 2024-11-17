@@ -15,7 +15,7 @@ const ROUTES = {
     "markAsComplete",
   ],
   COMMON_ROUTES: ["switchRole", "updateUser", "deleteUser", "user"],
-  ADMIN: ["users"],
+  ADMIN: ["users", "getTopRatedSellers", "getTopRatedListings", "getTopBuyers"],
 };
 
 const authenticate = (token: string): any => {
