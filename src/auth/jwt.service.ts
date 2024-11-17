@@ -4,7 +4,7 @@ class JWTService {
   private static instance: JWTService;
   private signingSecret: string;
 
-  constructor() {
+  private constructor() {
     this.signingSecret = process.env.SECRET_KEY || "secret";
   }
 
