@@ -2,13 +2,14 @@ import { GraphQLObjectType, GraphQLSchema } from "graphql";
 import { UserQueries, UserMutations } from "./users/users.resolver";
 import { AuthMutations } from "./auth/auth.resolver";
 import { ListingMutations } from "./listings/listing.resolver";
+import { BookingMutations } from "./bookings/booking.resolver";
 
 const rootQuery = new GraphQLObjectType({
   name: "RootQuery",
   fields: {
     user: {
       type: UserQueries,
-      resolve: (parent, args) => ({}), // Add Root Resolver If Necessary
+      resolve: () => ({}), // Add Root Resolver If Necessary
     },
     // Todo: Add More Resolvers here for each of the defined modules
   },
@@ -19,15 +20,19 @@ const rootMutation = new GraphQLObjectType({
   fields: {
     user: {
       type: UserMutations,
-      resolve: (parent, args) => ({}),
+      resolve: () => ({}),
     },
     auth: {
       type: AuthMutations,
-      resolve: (parent, args, context) => ({}),
+      resolve: () => ({}),
     },
     listing: {
       type: ListingMutations,
-      resolve: (parent, args, context) => ({}),
+      resolve: () => ({}),
+    },
+    booking: {
+      type: BookingMutations,
+      resolve: () => ({}),
     },
   },
 });

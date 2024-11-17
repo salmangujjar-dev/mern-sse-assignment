@@ -7,7 +7,7 @@ import CustomError from "../utils/CustomError";
 import { ROLES } from "../types/auth.types";
 
 const ROUTES = {
-  [ROLES.BUYER]: [],
+  [ROLES.BUYER]: ["bookListing"],
   [ROLES.SELLER]: ["createListing", "updateListing", "deleteListing"],
   COMMON_ROUTES: ["switchRole", "updateUser", "deleteUser", "user"],
   ADMIN: ["users"],
