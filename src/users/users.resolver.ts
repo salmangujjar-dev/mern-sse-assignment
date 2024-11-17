@@ -58,7 +58,7 @@ const UserMutations = new GraphQLObjectType({
         id: { type: GraphQLString },
         email: { type: new GraphQLNonNull(GraphQLString) },
         username: { type: new GraphQLNonNull(GraphQLString) },
-        password: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: GraphQLString },
         isAdmin: { type: new GraphQLNonNull(GraphQLBoolean) },
       },
       resolve: protectedResolver(async (_, args, { user }) => {
@@ -66,7 +66,12 @@ const UserMutations = new GraphQLObjectType({
           throw new CustomError("Not authorized", StatusCodes.FORBIDDEN);
         }
         const userId = user.isAdmin ? args.id : user.userId;
-        return await userService.updateUser({ ...args, id: userId });
+        const adminCtx = user.isAdmin;
+        return await userService.updateUser({
+          ...args,
+          adminCtx,
+          id: userId,
+        });
       }),
     },
 

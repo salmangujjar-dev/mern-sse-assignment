@@ -43,7 +43,14 @@ class UserService {
     }
   }
 
-  async updateUser({ id, email, username, password, isAdmin }: TUpdateUser) {
+  async updateUser({
+    id,
+    email,
+    username,
+    password,
+    adminCtx,
+    isAdmin,
+  }: TUpdateUser) {
     try {
       const user = await User.findById(id);
 
@@ -51,19 +58,21 @@ class UserService {
         throw new CustomError("User not found", StatusCodes.NOT_FOUND);
       }
 
-      if (password.length < 8) {
+      if (password && password.length < 8) {
         throw new CustomError(
           "Password must be at least 8 characters long",
           StatusCodes.BAD_REQUEST
         );
       }
 
-      const hashedPassword = await bcrypt.hash(password, 10);
+      if (password) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        user.password = hashedPassword;
+      }
 
       user.email = email;
       user.username = username;
-      user.password = hashedPassword;
-      user.isAdmin = user.isAdmin ? isAdmin : user.isAdmin;
+      user.isAdmin = adminCtx ? isAdmin : user.isAdmin;
 
       await user.save();
 
