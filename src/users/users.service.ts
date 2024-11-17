@@ -29,9 +29,11 @@ class UserService {
     return user;
   }
 
-  async getUser(userId: string, adminId: string) {
+  async getUser(userId: string, adminId: string, adminCtx: boolean) {
     try {
-      await this.findAdminUser(adminId);
+      if (adminCtx) {
+        await this.findAdminUser(adminId);
+      }
       return await this.findUser(userId);
     } catch (error: any) {
       this.logger.error(error);
@@ -58,7 +60,9 @@ class UserService {
     adminId: string
   ) {
     try {
-      await this.findAdminUser(adminId);
+      if (adminCtx) {
+        await this.findAdminUser(adminId);
+      }
       const user = await User.findById(id);
 
       if (!user) {
@@ -90,9 +94,11 @@ class UserService {
     }
   }
 
-  async deleteUser(userId: string, adminId: string) {
+  async deleteUser(userId: string, adminId: string, adminCtx: boolean) {
     try {
-      await this.findAdminUser(adminId);
+      if (adminCtx) {
+        await this.findAdminUser(adminId);
+      }
       const user = await User.findByIdAndDelete(userId);
       if (!user) {
         throw new CustomError("User not found", StatusCodes.NOT_FOUND);
