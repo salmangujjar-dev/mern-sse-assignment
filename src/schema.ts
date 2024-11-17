@@ -1,8 +1,10 @@
 import { GraphQLObjectType, GraphQLSchema } from "graphql";
+
 import { UserQueries, UserMutations } from "./users/users.resolver";
 import { AuthMutations } from "./auth/auth.resolver";
 import { ListingMutations } from "./listings/listing.resolver";
 import { BookingMutations } from "./bookings/booking.resolver";
+import { RatingMutations } from "./ratings/rating.resolver";
 
 const rootQuery = new GraphQLObjectType({
   name: "RootQuery",
@@ -32,6 +34,10 @@ const rootMutation = new GraphQLObjectType({
     },
     booking: {
       type: BookingMutations,
+      resolve: () => ({}),
+    },
+    rating: {
+      type: RatingMutations,
       resolve: () => ({}),
     },
   },

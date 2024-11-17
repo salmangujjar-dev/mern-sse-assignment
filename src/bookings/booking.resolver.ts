@@ -20,6 +20,15 @@ const BookingMutations = new GraphQLObjectType({
         return await bookingService.book(user.userId, listingId);
       }),
     },
+    markAsComplete: {
+      type: BookingType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve: protectedResolver(async (_, { id }, { user }) => {
+        return await bookingService.markAsComplete(user.userId, id);
+      }),
+    },
   },
 });
 
