@@ -37,7 +37,7 @@ const UserQueries = new GraphQLObjectType({
       type: UserType,
       args: { id: { type: GraphQLString } },
       resolve: protectedResolver(async (_, args, { user }) => {
-        if (!user.isAdmin && user.id !== args.id) {
+        if (!user.isAdmin && user.userId !== args.id) {
           throw new CustomError("Not authorized", StatusCodes.FORBIDDEN);
         }
         const userId = user.isAdmin ? args.id : user.userId;
@@ -62,7 +62,7 @@ const UserMutations = new GraphQLObjectType({
         isAdmin: { type: new GraphQLNonNull(GraphQLBoolean) },
       },
       resolve: protectedResolver(async (_, args, { user }) => {
-        if (!user.isAdmin && user.id !== args.id) {
+        if (!user.isAdmin && user.userId !== args.id) {
           throw new CustomError("Not authorized", StatusCodes.FORBIDDEN);
         }
         const userId = user.isAdmin ? args.id : user.userId;
@@ -80,7 +80,7 @@ const UserMutations = new GraphQLObjectType({
       }),
       args: { id: { type: GraphQLString } },
       resolve: protectedResolver(async (_, args, { user }) => {
-        if (!user.isAdmin && user.id !== args.id) {
+        if (!user.isAdmin && user.userId !== args.id) {
           throw new CustomError("Not authorized", StatusCodes.FORBIDDEN);
         }
         const userId = user.isAdmin ? args.id : user.userId;
