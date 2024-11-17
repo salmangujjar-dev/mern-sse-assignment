@@ -17,7 +17,7 @@ const ListingMutations = new GraphQLObjectType({
         title: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve: protectedResolver(async (_, { title }, { user }) => {
-        return await listingService.create(user.id, title);
+        return await listingService.create(user.userId, title);
       }),
     },
     updateListing: {
@@ -27,16 +27,21 @@ const ListingMutations = new GraphQLObjectType({
         title: { type: GraphQLString },
       },
       resolve: protectedResolver(async (_, { id, title }, { user }) => {
-        return await listingService.update(user.id, id, title);
+        return await listingService.update(user.userId, id, title);
       }),
     },
     deleteListing: {
-      type: ListingType,
+      type: new GraphQLObjectType({
+        name: "DeleteListingMessage",
+        fields: {
+          message: { type: GraphQLString },
+        },
+      }),
       args: {
         id: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve: protectedResolver(async (_, { id }, { user }) => {
-        return await listingService.delete(user.id, id);
+        return await listingService.delete(user.userId, id);
       }),
     },
   },

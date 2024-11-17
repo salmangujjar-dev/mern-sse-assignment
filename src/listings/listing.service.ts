@@ -9,7 +9,9 @@ class ListingService {
   async create(userId: string, title: string) {
     try {
       const listing = new Listing({ title, user: userId });
-      await listing.save;
+      await listing.save();
+
+      await listing.populate("user");
 
       return listing;
     } catch (error: any) {
@@ -30,6 +32,8 @@ class ListingService {
         throw new CustomError("Listing not found or not authorized");
       }
 
+      await listing.populate("user");
+
       return listing;
     } catch (error: any) {
       this.logger.error(error);
@@ -48,7 +52,7 @@ class ListingService {
         throw new CustomError("Listing not found or not authorized");
       }
 
-      return listing;
+      return { message: "Listing deleted successfully" };
     } catch (error: any) {
       this.logger.error(error);
       return error;
