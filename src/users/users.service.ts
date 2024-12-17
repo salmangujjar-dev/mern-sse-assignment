@@ -13,29 +13,41 @@ import { TUpdateUser } from "../../types/user.types";
 class UserService {
   private readonly logger = new Logger(UserService.name);
 
-  async getUser(userId: string) {
+  private async findAdminUser(adminId: string) {
+    const adminUser = await User.findById(adminId);
+    if (!adminUser) {
+      throw new CustomError("Admin User not found", StatusCodes.NOT_FOUND);
+    }
+    return adminUser;
+  }
+
+  private async findUser(userId: string) {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+    }
+    return user;
+  }
+
+  async getUser(userId: string, adminId: string, adminCtx: boolean) {
     try {
-      const user = await User.findById(userId);
-
-      if (!user) {
-        throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+      if (adminCtx) {
+        await this.findAdminUser(adminId);
       }
-
-      return user;
+      return await this.findUser(userId);
     } catch (error: any) {
       this.logger.error(error);
       return error;
     }
   }
 
-  async getAllUsers() {
+  async getAllUsers(adminId: string) {
     try {
+      await this.findAdminUser(adminId);
       const users = await User.find();
-
       if (!users || users.length === 0) {
         throw new CustomError("No users found", StatusCodes.NOT_FOUND);
       }
-
       return users;
     } catch (error: any) {
       this.logger.error(error);
@@ -43,15 +55,14 @@ class UserService {
     }
   }
 
-  async updateUser({
-    id,
-    email,
-    username,
-    password,
-    adminCtx,
-    isAdmin,
-  }: TUpdateUser) {
+  async updateUser(
+    { id, email, username, password, adminCtx, isAdmin }: TUpdateUser,
+    adminId: string
+  ) {
     try {
+      if (adminCtx) {
+        await this.findAdminUser(adminId);
+      }
       const user = await User.findById(id);
 
       if (!user) {
@@ -83,14 +94,15 @@ class UserService {
     }
   }
 
-  async deleteUser(userId: string) {
+  async deleteUser(userId: string, adminId: string, adminCtx: boolean) {
     try {
+      if (adminCtx) {
+        await this.findAdminUser(adminId);
+      }
       const user = await User.findByIdAndDelete(userId);
-
       if (!user) {
         throw new CustomError("User not found", StatusCodes.NOT_FOUND);
       }
-
       return { message: "User deleted successfully" };
     } catch (error: any) {
       this.logger.error(error);
