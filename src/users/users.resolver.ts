@@ -25,9 +25,6 @@ const UserQueries = new GraphQLObjectType({
     users: {
       type: new GraphQLList(UserType),
       resolve: protectedResolver(async (_, __, { user }) => {
-        if (!user.isAdmin) {
-          throw new CustomError("Not authorized", StatusCodes.FORBIDDEN);
-        }
         return await userService.getAllUsers(user.userId);
       }),
     },

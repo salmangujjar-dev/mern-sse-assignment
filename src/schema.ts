@@ -5,6 +5,7 @@ import { AuthMutations } from "./auth/auth.resolver";
 import { ListingMutations } from "./listings/listing.resolver";
 import { BookingMutations } from "./bookings/booking.resolver";
 import { RatingMutations } from "./ratings/rating.resolver";
+import { AdminQueries } from "./admin/admin.resolver";
 
 const rootQuery = new GraphQLObjectType({
   name: "RootQuery",
@@ -14,6 +15,10 @@ const rootQuery = new GraphQLObjectType({
       resolve: () => ({}), // Add Root Resolver If Necessary
     },
     // Todo: Add More Resolvers here for each of the defined modules
+    admin: {
+      type: AdminQueries,
+      resolve: () => ({}),
+    },
   },
 });
 
