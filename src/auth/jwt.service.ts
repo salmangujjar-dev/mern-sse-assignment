@@ -1,4 +1,7 @@
+import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+
+dotenv.config();
 
 class JWTService {
   private static instance: JWTService;
