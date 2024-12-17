@@ -3,10 +3,15 @@ import { GraphQLFieldResolver } from "graphql";
 import { StatusCodes } from "http-status-codes";
 
 import CustomError from "../utils/CustomError";
+
 import { ROLES } from "../types/auth.types";
 
-const BUYER_ROUTES = ["switchRole"];
-const SELLER_ROUTES = ["switchRole"];
+const ROUTES = {
+  [ROLES.BUYER]: [],
+  [ROLES.SELLER]: [],
+  COMMON_ROUTES: ["switchRole", "updateUser", "deleteUser", "user"],
+  ADMIN: ["users"],
+};
 
 const authenticate = (token: string): any => {
   try {
@@ -24,16 +29,18 @@ export const protectedResolver =
     const user = authenticate(context.headers.authorization);
     context.user = user;
 
-    if (user.role !== ROLES.BUYER && user.role !== ROLES.SELLER) {
+    if (![ROLES.BUYER, ROLES.SELLER].includes(user.role)) {
       throw new CustomError("Invalid Role", StatusCodes.FORBIDDEN);
     }
 
     const { fieldName } = info;
+    const allowedRoutes = [
+      ...ROUTES[user.role as ROLES],
+      ...ROUTES.COMMON_ROUTES,
+      ...(user.isAdmin ? ROUTES.ADMIN : []),
+    ];
 
-    if (
-      (user.role === ROLES.BUYER && !BUYER_ROUTES.includes(fieldName)) ||
-      (user.role === ROLES.SELLER && !SELLER_ROUTES.includes(fieldName))
-    ) {
+    if (!allowedRoutes.includes(fieldName)) {
       throw new CustomError(
         "You are not allowed to access.",
         StatusCodes.FORBIDDEN
